@@ -222,4 +222,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**🎉 Enjoy learning sorting algorithms!** 
+**🎉 Enjoy learning sorting algorithms!**

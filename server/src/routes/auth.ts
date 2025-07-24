@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import { db } from '../database/init';
+import { User } from '../types/database';
 
 const router = express.Router();
 
@@ -81,7 +82,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     // Find user
-    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]) as unknown as User;
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -124,7 +125,7 @@ router.post('/verify-email', async (req, res) => {
     const { email, code } = req.body;
 
     // Find user
-    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]) as unknown as User;
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -150,7 +151,7 @@ router.post('/resend-verification', async (req, res) => {
     const { email } = req.body;
 
     // Find user
-    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    const user = await db.get('SELECT * FROM users WHERE email = ?', [email]) as unknown as User;
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

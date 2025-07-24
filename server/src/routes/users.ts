@@ -55,7 +55,7 @@ router.put('/profile', authenticateToken, async (req: any, res: any) => {
       [username.trim(), req.user.id]
     );
 
-    if (result.changes === 0) {
+    if ((result as any).changes === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
 

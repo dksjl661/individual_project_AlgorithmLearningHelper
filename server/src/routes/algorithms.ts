@@ -127,7 +127,7 @@ router.get('/:id/visualization', async (req, res) => {
       }
     };
 
-    const data = visualizationData[id as keyof typeof visualizationData];
+    const data = visualizationData[id as unknown as keyof typeof visualizationData];
     if (!data) {
       return res.status(404).json({ error: 'Visualization data not found' });
     }
@@ -237,7 +237,7 @@ router.get('/:id/code-examples', async (req, res) => {
       }
     };
 
-    const examples = codeExamples[id as keyof typeof codeExamples];
+    const examples = codeExamples[id as unknown as keyof typeof codeExamples];
     if (!examples) {
       return res.status(404).json({ error: 'Algorithm not found' });
     }

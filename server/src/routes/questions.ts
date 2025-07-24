@@ -1,12 +1,13 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { db } from '../database/init';
+import { AuthenticatedRequest } from '../types/database';
 
 const router = express.Router();
 
 // JWT verification middleware
 const authenticateToken = (req: any, res: any, next: any) => {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers['authorization'] as string;
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
@@ -96,7 +97,7 @@ router.post('/:id/submit', authenticateToken, async (req, res) => {
     // Save submission
     await db.run(
       'INSERT INTO submissions (user_id, question_id, answer, language, is_correct, submitted_at) VALUES (?, ?, ?, ?, ?, ?)',
-      [req.user.id, id, answer, language || 'javascript', isCorrect, new Date().toISOString()]
+      [(req as any).user.id, id, answer, language || 'javascript', isCorrect, new Date().toISOString()]
     );
 
     res.json({
@@ -126,7 +127,7 @@ router.get('/wrong-answers', authenticateToken, async (req, res) => {
       JOIN questions q ON wa.question_id = q.id
       WHERE wa.user_id = ? AND wa.is_correct = 0
       ORDER BY wa.submitted_at DESC
-    `, [req.user.id]);
+    `, [(req as any).user.id]);
 
     res.json(wrongAnswers);
   } catch (error) {
@@ -142,10 +143,10 @@ router.delete('/wrong-answers/:id', authenticateToken, async (req, res) => {
     
     const result = await db.run(
       'DELETE FROM submissions WHERE id = ? AND user_id = ? AND is_correct = 0',
-      [id, req.user.id]
+      [id, (req as any).user.id]
     );
 
-    if (result.changes === 0) {
+    if ((result as any).changes === 0) {
       return res.status(404).json({ error: 'Wrong answer not found' });
     }
 

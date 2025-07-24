@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: sorting-algorithms-backend
+    env: node
+    plan: free
+    buildCommand: cd server && npm install && npm run build
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: DATABASE_URL
+        value: ./database.sqlite
+      - key: CORS_ORIGIN
+        value: https://your-frontend-url.vercel.app
+
+  - type: web
+    name: sorting-algorithms-frontend
+    env: static
+    plan: free
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: ./client/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://sorting-algorithms-backend.onrender.com 
